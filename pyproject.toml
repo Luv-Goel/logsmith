@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "logsmith"
+version = "0.1.0"
+description = "Log file forensics and analysis toolkit"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.8"
+dependencies = []
+
+[project.scripts]
+logsmith = "logsmith.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["logsmith*"]

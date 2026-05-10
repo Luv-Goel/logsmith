@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push: {branches: [main]}
+  pull_request: {branches: [main]}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install
+      run: pip install .
+    - name: Test
+      run: |
+        logsmith --version
+        echo '192.168.1.1 - - [10/Oct/2024:13:55:36 -0700] "GET /index.html HTTP/1.1" 200 2326' > /tmp/access.log
+        echo '192.168.1.2 - - [10/Oct/2024:13:55:37 -0700] "GET /about.html HTTP/1.1" 404 1234' >> /tmp/access.log
+        logsmith stats /tmp/access.log
+        logsmith anomalies /tmp/access.log
+        logsmith report /tmp/access.log -o /tmp/report.html
+        echo "ALL PASSED"
